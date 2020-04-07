@@ -14,9 +14,9 @@ fi
 
 if [ -n "$AUTH_TOKEN_STRING" ]
 then
-    mkdir -p $HOME/.gem
-    echo -e "$AUTH_TOKEN_STRING" >> $HOME/.gem/credentials
-    chmod 0600 $HOME/.gem/credentials
+    mkdir -p $GITHUB_WORKSPACE/.gem
+    echo -e "$AUTH_TOKEN_STRING" >> $GITHUB_WORKSPACE/.gem/credentials
+    chmod 400 $GITHUB_WORKSPACE/.gem/credentials
 fi
 
 # Setup SSH keys so we can push commits and tags to master branch
