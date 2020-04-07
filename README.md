@@ -1,23 +1,30 @@
-# Hello world docker action
 
-This action prints "Hello World" to the log or "Hello" + the name of a person to greet. To learn how this action was built, see "[Creating a Docker container action](https://help.github.com/en/articles/creating-a-docker-container-action)" in the GitHub Help documentation.
+# setup-gem-publish-action
+
+Action to setup gem and git for gem push. It appends authentication tokens to local $HOME/.gem/credentials file and configures git access so it can commit and push to branches. Git with SSH authentication is used so that it is possible to push to protected branches.
 
 ## Inputs
 
-### `who-to-greet`
+| Input    | Required  | Description              |
+|----------|-----------|--------------------------|
+| email    | no        | Email to use with git    |
+| username | no        | Username to use with git |
 
-**Required** The name of the person to greet. Default `"World"`.
+## Environment variables
 
-## Outputs
+| Variable          | Required  | Description
+|-------------------|-----------|-------------------------------------------------------------|
+| GIT_DEPLOY_KEY    | yes       | RSA key to authenticate to git repository                   |
+| AUTH_TOKEN_STRING | no        | Authentication string that is injected to $HOME/.gem/credentials file |
 
-### `time`
+## Usage example
 
-The time we greeted you.
-
-## Example usage
+The action is used as follows:
 
 ```yaml
-uses: actions/hello-world-docker-action@master
-with:
-  who-to-greet: 'Mona the Octocat'
+- uses: smartlyio/setup-gem-publish-action@v1
+  env:
+    AUTH_TOKEN_STRING: |
+      ---\n:rubygems_api_key: ${ARTIFACTORY_TOKEN}\n
+    GIT_DEPLOY_KEY: ${{ secrets.GIT_DEPLOY_KEY }}
 ```

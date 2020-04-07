@@ -1,15 +1,14 @@
-name: 'Hello World'
-description: 'Greet someone and record the time'
+name: 'Setup gem publish action'
+description: 'Setup gem and git for pushing to gem registry'
 inputs:
-  who-to-greet:  # id of input
-    description: 'Who to greet'
-    required: true
-    default: 'World'
-outputs:
-  time: # id of output
-    description: 'The time we greeted you'
+  email:
+    description: "Email to use with git"
+    required: false
+    default: 'bot@setup-gem-publish-action'
+  username:
+    description: 'Username to use with git'
+    required: false
+    default: 'Github Action'
 runs:
   using: 'docker'
   image: 'Dockerfile'
-  args:
-    - ${{ inputs.who-to-greet }}
