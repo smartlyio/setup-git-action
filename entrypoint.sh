@@ -10,15 +10,6 @@ then
     exit -1
 fi
 
-# Setup authentication for gem and mark the file as non-changed
-
-if [ -n "$AUTH_TOKEN_STRING" ]
-then
-    mkdir -p $GITHUB_WORKSPACE/.gem
-    echo -e "$AUTH_TOKEN_STRING" >> $GITHUB_WORKSPACE/.gem/credentials
-    chmod 400 $GITHUB_WORKSPACE/.gem/credentials
-fi
-
 # Setup SSH keys so we can push commits and tags to master branch
 mkdir -p $GITHUB_WORKSPACE/.ssh
 ssh-keyscan -t rsa github.com > $GITHUB_WORKSPACE/.ssh/known_hosts
