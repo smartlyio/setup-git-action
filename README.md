@@ -1,7 +1,7 @@
 
-# setup-gem-publish-action
+# setup-git-action
 
-Action to setup gem and git for gem push. It configures git access so it can commit and push to branches. Git with SSH authentication is used so that it is possible to push to protected branches.
+Action to setup git. It configures git access so it can commit and push to branches. Git with SSH authentication is used so that it is possible to push to protected branches.
 
 ## Inputs
 
@@ -21,7 +21,7 @@ Action to setup gem and git for gem push. It configures git access so it can com
 The action is used as follows:
 
 ```yaml
-- uses: smartlyio/setup-gem-publish-action@v1
+- uses: smartlyio/setup-git-action@v1
   env:
     GIT_DEPLOY_KEY: ${{ secrets.GIT_DEPLOY_KEY }}
 ```
