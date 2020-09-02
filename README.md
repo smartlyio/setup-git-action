@@ -5,10 +5,11 @@ Action to setup git. It configures git access so it can commit and push to branc
 
 ## Inputs
 
-| Input    | Required  | Description              |
-|----------|-----------|--------------------------|
-| email    | no        | Email to use with git    |
-| username | no        | Username to use with git |
+| Input            | Required  | Description                                                       |
+|------------------|-----------|-------------------------------------------------------------------|
+| email            | no        | Email to use with git                                             |
+| username         | no        | Username to use with git                                          |
+| workingDirectory | no        | Relative path to a git working directory in which to authenticate |
 
 ## Environment variables
 
