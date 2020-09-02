@@ -9,6 +9,9 @@ inputs:
     description: 'Username to use with git'
     required: false
     default: 'Github Action'
+  workingDirectory:
+    description: 'Relative path to a git working directory in which to authenticate'
+    required: false
 runs:
   using: 'docker'
   image: 'Dockerfile'

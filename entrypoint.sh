@@ -7,10 +7,14 @@ EXT_HOME=/home/runner/work/_temp/_github_home
 
 # Validate input
 
-if [ -z "$GIT_DEPLOY_KEY" ]
-then
+if [ -z "$GIT_DEPLOY_KEY" ]; then
     echo "No GIT_DEPLOY_KEY environment variable set"
     exit 255
+fi
+
+# If a working directory is set, change to it.
+if [ -n "$INPUT_WORKING_DIRECTORY" ]; then
+    cd "$INPUT_WORKING_DIRECTORY"
 fi
 
 # Setup SSH keys so we can push commits and tags to master branch
