@@ -1,16 +1,24 @@
 import * as core from '@actions/core'
-import {wait} from './wait'
+import {getEnv, setupGitAction, cleanupGitAction} from './setup-git-action'
+
+function isPost(): boolean {
+  // Will be false if the environment variable doesn't exist; true if it does.
+  return !!process.env['STATE_isPost']
+}
 
 async function run(): Promise<void> {
   try {
-    const ms: string = core.getInput('milliseconds')
-    core.debug(`Waiting ${ms} milliseconds ...`) // debug is only output if you set the secret `ACTIONS_RUNNER_DEBUG` to true
+    const post = isPost()
+    core.saveState('isPost', post)
+    const email: string = core.getInput('email')
+    const username: string = core.getInput('username')
+    const deployKey: string = getEnv('GIT_DEPLOY_KEY')
 
-    core.debug(new Date().toTimeString())
-    await wait(parseInt(ms, 10))
-    core.debug(new Date().toTimeString())
-
-    core.setOutput('time', new Date().toTimeString())
+    if (!post) {
+      await setupGitAction(email, username, deployKey)
+    } else {
+      await cleanupGitAction()
+    }
   } catch (error) {
     core.setFailed(error.message)
   }
