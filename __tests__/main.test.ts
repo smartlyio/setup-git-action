@@ -118,12 +118,7 @@ describe('test npm-setup-publish', () => {
     ])
     expect(mockExec.mock.calls[4]).toEqual([
       'git',
-      [
-        'remote',
-        'set-url',
-        'origin',
-        `git@github.com:${githubRepository}.git`
-      ]
+      ['remote', 'set-url', 'origin', `git@github.com:${githubRepository}.git`]
     ])
   })
 
