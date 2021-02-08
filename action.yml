@@ -1,14 +1,15 @@
-name: 'Setup gem publish action'
-description: 'Setup gem and git for pushing to gem registry'
+name: 'Setup git publish action'
+description: 'Setup git with an SSH key for pushing changes'
 inputs:
   email:
     description: "Email to use with git"
     required: false
-    default: 'bot@setup-gem-publish-action'
+    default: 'bot@setup-git-publish-action'
   username:
     description: 'Username to use with git'
     required: false
     default: 'Github Action'
 runs:
-  using: 'docker'
-  image: 'Dockerfile'
+  using: 'node12'
+  main: 'dist/index.js'
+  post: 'dist/index.js'
