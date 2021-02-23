@@ -15,7 +15,9 @@ export function getEnv(name: string): string {
 
 export function getSshPath(name: string): string {
   const temp = getEnv('RUNNER_TEMP')
-  return path.join(temp, 'setup-git-action', name)
+  // An older version of the ta_org_sync workflow depends on the exact
+  // path used by this action.  We use _github_home here for compatibility.
+  return path.join(temp, '_github_home', name)
 }
 
 export async function sshKeyscan(): Promise<string> {
