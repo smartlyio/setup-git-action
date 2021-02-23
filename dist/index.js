@@ -148,7 +148,7 @@ function setupGitAction(email, username, deployKey) {
         const sshDir = path.dirname(keyPath);
         yield fs_1.promises.mkdir(sshDir, { recursive: true });
         core.info(`Writing deploy key to ${keyPath}`);
-        yield fs_1.promises.writeFile(keyPath, deployKey, { mode: 0o400 });
+        yield fs_1.promises.writeFile(keyPath, `${deployKey}\n`, { mode: 0o400 });
         core.info('Running ssh-keyscan for github.com');
         const githubKey = yield sshKeyscan();
         yield fs_1.promises.writeFile(knownHostsPath, githubKey);

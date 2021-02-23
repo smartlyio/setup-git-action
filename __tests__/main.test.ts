@@ -95,7 +95,7 @@ describe('test npm-setup-publish', () => {
     const sshKeyData = await fs.readFile(
       path.join(runnerTempDir as string, TEMPDIR_NAME, 'id_rsa')
     )
-    expect(sshKeyData.toString()).toEqual(deployKey)
+    expect(sshKeyData.toString()).toEqual(`${deployKey}\n`)
 
     const mockExec = mocked(exec)
     expect(mockExec.mock.calls.length).toEqual(5)
