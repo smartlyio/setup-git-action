@@ -100,12 +100,13 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.cleanupGitAction = exports.setupGitAction = exports.sshKeyscan = exports.getSshPath = exports.getEnv = void 0;
+exports.cleanupGitAction = exports.setupGitAction = exports.sshKeyscan = exports.getSshPath = exports.getEnv = exports.TEMPDIR_NAME = void 0;
 const core = __importStar(__webpack_require__(186));
 const exec = __importStar(__webpack_require__(514));
 const process = __importStar(__webpack_require__(765));
 const path = __importStar(__webpack_require__(622));
 const fs_1 = __webpack_require__(747);
+exports.TEMPDIR_NAME = '_github_home';
 function getEnv(name) {
     const value = process.env[name];
     if (value === undefined) {
@@ -116,7 +117,9 @@ function getEnv(name) {
 exports.getEnv = getEnv;
 function getSshPath(name) {
     const temp = getEnv('RUNNER_TEMP');
-    return path.join(temp, 'setup-git-action', name);
+    // An older version of the ta_org_sync workflow depends on the exact
+    // path used by this action.  We use _github_home here for compatibility.
+    return path.join(temp, exports.TEMPDIR_NAME, name);
 }
 exports.getSshPath = getSshPath;
 function sshKeyscan() {

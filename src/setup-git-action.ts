@@ -5,6 +5,8 @@ import * as process from 'process'
 import * as path from 'path'
 import {promises as fs} from 'fs'
 
+export const TEMPDIR_NAME = '_github_home'
+
 export function getEnv(name: string): string {
   const value: string | undefined = process.env[name]
   if (value === undefined) {
@@ -15,7 +17,9 @@ export function getEnv(name: string): string {
 
 export function getSshPath(name: string): string {
   const temp = getEnv('RUNNER_TEMP')
-  return path.join(temp, 'setup-git-action', name)
+  // An older version of the ta_org_sync workflow depends on the exact
+  // path used by this action.  We use _github_home here for compatibility.
+  return path.join(temp, TEMPDIR_NAME, name)
 }
 
 export async function sshKeyscan(): Promise<string> {
