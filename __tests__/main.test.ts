@@ -59,7 +59,7 @@ describe('test npm-setup-publish', () => {
 
   test('get ssh path', () => {
     const filePath = getSshPath('id_rsa')
-    expect(filePath).toEqual(`${runnerTempDir}/setup-git-action/id_rsa`)
+    expect(filePath).toEqual(`${runnerTempDir}/_github_home/id_rsa`)
   })
 
   test('ssh-keyscan', async () => {
@@ -92,7 +92,7 @@ describe('test npm-setup-publish', () => {
     await setupGitAction(email, username, deployKey)
 
     const sshKeyData = await fs.readFile(
-      path.join(runnerTempDir as string, 'setup-git-action', 'id_rsa')
+      path.join(runnerTempDir as string, '_github_home', 'id_rsa')
     )
     expect(sshKeyData.toString()).toEqual(deployKey)
 
@@ -123,14 +123,10 @@ describe('test npm-setup-publish', () => {
   })
 
   test('cleanupGitAction', async () => {
-    const keyPath = path.join(
-      runnerTempDir as string,
-      'setup-git-action',
-      'id_rsa'
-    )
+    const keyPath = path.join(runnerTempDir as string, '_github_home', 'id_rsa')
     const hostsPath = path.join(
       runnerTempDir as string,
-      'setup-git-action',
+      '_github_home',
       'known_hosts'
     )
     await cleanupGitAction()
