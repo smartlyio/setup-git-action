@@ -9,7 +9,8 @@ import {
   getSshPath,
   sshKeyscan,
   setupGitAction,
-  cleanupGitAction
+  cleanupGitAction,
+  TEMPDIR_NAME
 } from '../src/setup-git-action'
 
 jest.mock('@actions/core', () => ({
@@ -59,7 +60,7 @@ describe('test npm-setup-publish', () => {
 
   test('get ssh path', () => {
     const filePath = getSshPath('id_rsa')
-    expect(filePath).toEqual(`${runnerTempDir}/_github_home/id_rsa`)
+    expect(filePath).toEqual(`${runnerTempDir}/${TEMPDIR_NAME}/id_rsa`)
   })
 
   test('ssh-keyscan', async () => {
@@ -92,7 +93,7 @@ describe('test npm-setup-publish', () => {
     await setupGitAction(email, username, deployKey)
 
     const sshKeyData = await fs.readFile(
-      path.join(runnerTempDir as string, '_github_home', 'id_rsa')
+      path.join(runnerTempDir as string, TEMPDIR_NAME, 'id_rsa')
     )
     expect(sshKeyData.toString()).toEqual(deployKey)
 
@@ -123,10 +124,10 @@ describe('test npm-setup-publish', () => {
   })
 
   test('cleanupGitAction', async () => {
-    const keyPath = path.join(runnerTempDir as string, '_github_home', 'id_rsa')
+    const keyPath = path.join(runnerTempDir as string, TEMPDIR_NAME, 'id_rsa')
     const hostsPath = path.join(
       runnerTempDir as string,
-      '_github_home',
+      TEMPDIR_NAME,
       'known_hosts'
     )
     await cleanupGitAction()
