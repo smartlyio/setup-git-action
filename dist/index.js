@@ -116,7 +116,9 @@ function getEnv(name) {
 exports.getEnv = getEnv;
 function getSshPath(name) {
     const temp = getEnv('RUNNER_TEMP');
-    return path.join(temp, 'setup-git-action', name);
+    // An older version of the ta_org_sync workflow depends on the exact
+    // path used by this action.  We use _github_home here for compatibility.
+    return path.join(temp, '_github_home', name);
 }
 exports.getSshPath = getSshPath;
 function sshKeyscan() {
