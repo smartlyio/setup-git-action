@@ -50,7 +50,7 @@ export async function setupGitAction(
   await fs.mkdir(sshDir, {recursive: true})
 
   core.info(`Writing deploy key to ${keyPath}`)
-  await fs.writeFile(keyPath, deployKey, {mode: 0o400})
+  await fs.writeFile(keyPath, `${deployKey}\n`, {mode: 0o400})
 
   core.info('Running ssh-keyscan for github.com')
   const githubKey = await sshKeyscan()
