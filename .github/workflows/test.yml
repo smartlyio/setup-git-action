@@ -44,17 +44,20 @@ jobs:
         with:
           email: ${{ env.EMAIL_INPUT }}
           username: ${{ env.USERNAME_INPUT }}
-      - run: |
+      - name: Validate result
+        env:
+          ACTION_SUBDIR: _github_home
+        run: |
           set -u
-          cat "$RUNNER_TEMP/setup-git-action/id_rsa"
+          cat "$RUNNER_TEMP/$ACTION_SUBDIR/id_rsa"
           echo
           git config user.name
           git config user.email
           git remote get-url origin
           git config core.sshCommand
-          grep '^github\.com' "$RUNNER_TEMP/setup-git-action/known_hosts"
+          grep '^github\.com' "$RUNNER_TEMP/$ACTION_SUBDIR/known_hosts"
 
-          [[ "$(cat "$RUNNER_TEMP/setup-git-action/id_rsa")" == "not-a-real-key" ]]
+          [[ "$(cat "$RUNNER_TEMP/$ACTION_SUBDIR/id_rsa")" == "not-a-real-key" ]]
           [[ "$(git config user.name)" == "${{ env.USERNAME_INPUT }}" ]]
           [[ "$(git config user.email)" == "${{ env.EMAIL_INPUT }}" ]]
           [[ "$(git remote get-url origin)" == "git@github.com:$GITHUB_REPOSITORY.git" ]]
