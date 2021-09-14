@@ -1,8 +1,8 @@
 {
-  "name": "typescript-action",
-  "version": "0.0.0",
+  "name": "setup-git-action",
+  "version": "1.1.2",
   "private": true,
-  "description": "TypeScript template action",
+  "description": "Action to configure a git ssh key for pushing changes",
   "main": "lib/main.js",
   "scripts": {
     "build": "tsc",
@@ -11,15 +11,16 @@
     "lint": "eslint src/**/*.ts",
     "package": "ncc build --source-map --license licenses.txt",
     "test": "jest",
-    "all": "npm run build && npm run format && npm run lint && npm run package && npm test"
+    "all": "npm run build && npm run format && npm run lint && npm run package && npm test",
+    "version": "npm run build && npm run package && git add -- dist"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/actions/typescript-action.git"
+    "url": "git+https://github.com/smartlyio/setup-git-action.git"
   },
   "keywords": [
     "actions",
-    "node",
+    "git",
     "setup"
   ],
   "author": "",
