@@ -1,8 +1,8 @@
 import * as core from '@actions/core'
 import * as exec from '@actions/exec'
 
-import * as process from 'process'
 import * as path from 'path'
+import * as process from 'process'
 import {promises as fs} from 'fs'
 
 export const TEMPDIR_NAME = '_github_home'

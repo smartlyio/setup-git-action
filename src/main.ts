@@ -1,5 +1,5 @@
 import * as core from '@actions/core'
-import {getEnv, setupGitAction, cleanupGitAction} from './setup-git-action'
+import {cleanupGitAction, getEnv, setupGitAction} from './setup-git-action'
 
 function isPost(): boolean {
   // Will be false if the environment variable doesn't exist; true if it does.
