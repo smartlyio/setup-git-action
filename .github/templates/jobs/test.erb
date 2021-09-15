@@ -1,0 +1,36 @@
+test:
+  runs-on: <%= ubuntu_version %>
+  steps:
+  - uses: actions/checkout@v2
+  - name: "Build action for test"
+    run: |
+      npm install
+      npm run all
+      git clean -fXd
+  - name: Test executing the action
+    uses: ./
+    env:
+      GIT_DEPLOY_KEY: not-a-real-key
+    with:
+      email: ${{ env.EMAIL_INPUT }}
+      username: ${{ env.USERNAME_INPUT }}
+  - name: Validate result
+    env:
+      ACTION_SUBDIR: _github_home
+    run: |
+      set -u
+      cat "$RUNNER_TEMP/$ACTION_SUBDIR/id_rsa"
+      echo
+      git config user.name
+      git config user.email
+      git remote get-url origin
+      git config core.sshCommand
+      grep '^github\.com' "$RUNNER_TEMP/$ACTION_SUBDIR/known_hosts"
+
+      [[ "$(cat "$RUNNER_TEMP/$ACTION_SUBDIR/id_rsa")" == "not-a-real-key" ]]
+      [[ "$(git config user.name)" == "${{ env.USERNAME_INPUT }}" ]]
+      [[ "$(git config user.email)" == "${{ env.EMAIL_INPUT }}" ]]
+      [[ "$(git remote get-url origin)" == "git@github.com:$GITHUB_REPOSITORY.git" ]]
+
+      # Just check that it is altered from default
+      [[ "$(git config core.sshCommand)" == *UserKnownHostsFile* ]]
