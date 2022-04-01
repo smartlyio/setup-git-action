@@ -144,7 +144,7 @@ function sshKeyscan() {
             }
         };
         yield exec.exec('ssh-keyscan', ['-t', 'rsa', 'github.com'], options);
-        core.warning(`Stderr from ssh-keyscan: ${stderr}`);
+        core.info(`Stderr from ssh-keyscan: ${stderr}`);
         return stdout;
     });
 }
