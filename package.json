@@ -1,6 +1,6 @@
 {
   "name": "setup-git-action",
-  "version": "1.2.22",
+  "version": "1.2.23",
   "private": true,
   "description": "Action to configure a git ssh key for pushing changes",
   "main": "lib/main.js",
