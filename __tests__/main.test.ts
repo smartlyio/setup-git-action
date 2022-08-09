@@ -2,7 +2,7 @@ import {exec} from '@actions/exec'
 import {promises as fs} from 'fs'
 import * as fssync from 'fs'
 import * as path from 'path'
-import {mocked} from 'ts-jest/utils'
+import {mocked} from 'jest-mock'
 
 import {
   getEnv,
