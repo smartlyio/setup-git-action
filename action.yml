@@ -10,6 +10,6 @@ inputs:
     required: false
     default: 'Github Action'
 runs:
-  using: 'node12'
+  using: 'node16'
   main: 'dist/index.js'
   post: 'dist/index.js'
