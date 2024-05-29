@@ -5,8 +5,6 @@ import * as path from 'path'
 import * as process from 'process'
 import {promises as fs} from 'fs'
 
-export const TEMPDIR_NAME = '_github_home'
-
 export function getEnv(name: string): string {
   const value: string | undefined = process.env[name]
   if (value === undefined) {
@@ -15,11 +13,9 @@ export function getEnv(name: string): string {
   return value
 }
 
-export function getSshPath(name: string): string {
+export function getSshPath(subdir: string, name: string): string {
   const temp = getEnv('RUNNER_TEMP')
-  // An older version of the ta_org_sync workflow depends on the exact
-  // path used by this action.  We use _github_home here for compatibility.
-  return path.join(temp, TEMPDIR_NAME, name)
+  return path.join(temp, subdir, name)
 }
 
 export async function sshKeyscan(): Promise<string> {
@@ -42,10 +38,11 @@ export async function sshKeyscan(): Promise<string> {
 export async function setupGitAction(
   email: string,
   username: string,
-  deployKey: string
+  deployKey: string,
+  directory: string
 ): Promise<void> {
-  const keyPath = getSshPath('id_rsa')
-  const knownHostsPath = getSshPath('known_hosts')
+  const keyPath = getSshPath(directory, 'id_rsa')
+  const knownHostsPath = getSshPath(directory, 'known_hosts')
   const sshDir = path.dirname(keyPath)
   await fs.mkdir(sshDir, {recursive: true})
 
@@ -70,9 +67,9 @@ export async function setupGitAction(
   await exec.exec('git', ['remote', 'set-url', 'origin', origin])
 }
 
-export async function cleanupGitAction(): Promise<void> {
-  const keyPath = getSshPath('id_rsa')
-  const knownHosts = getSshPath('known_hosts')
+export async function cleanupGitAction(directory: string): Promise<void> {
+  const keyPath = getSshPath(directory, 'id_rsa')
+  const knownHosts = getSshPath(directory, 'known_hosts')
 
   core.info('Shredding files containing secrets')
   await exec.exec('shred', ['-zuf', keyPath])
