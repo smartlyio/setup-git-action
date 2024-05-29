@@ -16,7 +16,7 @@ async function run(): Promise<void> {
     const deployKey: string = getEnv('GIT_DEPLOY_KEY')
 
     if (!post) {
-      const directory = randomUUID()
+      const directory = `_github_home_${randomUUID()}`
       core.saveState('directory', directory)
       await setupGitAction(email, username, deployKey, directory)
     } else {
