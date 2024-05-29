@@ -41,6 +41,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 const core = __importStar(__nccwpck_require__(186));
 const setup_git_action_1 = __nccwpck_require__(331);
+const crypto_1 = __nccwpck_require__(113);
 function isPost() {
     // Will be false if the environment variable doesn't exist; true if it does.
     return !!process.env['STATE_isPost'];
@@ -54,10 +55,13 @@ function run() {
             const username = core.getInput('username');
             const deployKey = (0, setup_git_action_1.getEnv)('GIT_DEPLOY_KEY');
             if (!post) {
-                yield (0, setup_git_action_1.setupGitAction)(email, username, deployKey);
+                const directory = `_github_home_${(0, crypto_1.randomUUID)()}`;
+                core.saveState('directory', directory);
+                yield (0, setup_git_action_1.setupGitAction)(email, username, deployKey, directory);
             }
             else {
-                yield (0, setup_git_action_1.cleanupGitAction)();
+                const directory = core.getState('directory');
+                yield (0, setup_git_action_1.cleanupGitAction)(directory);
             }
         }
         catch (error) {
@@ -108,13 +112,12 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.cleanupGitAction = exports.setupGitAction = exports.sshKeyscan = exports.getSshPath = exports.getEnv = exports.TEMPDIR_NAME = void 0;
+exports.cleanupGitAction = exports.setupGitAction = exports.sshKeyscan = exports.getSshPath = exports.getEnv = void 0;
 const core = __importStar(__nccwpck_require__(186));
 const exec = __importStar(__nccwpck_require__(514));
 const path = __importStar(__nccwpck_require__(17));
 const process = __importStar(__nccwpck_require__(282));
 const fs_1 = __nccwpck_require__(147);
-exports.TEMPDIR_NAME = '_github_home';
 function getEnv(name) {
     const value = process.env[name];
     if (value === undefined) {
@@ -123,11 +126,9 @@ function getEnv(name) {
     return value;
 }
 exports.getEnv = getEnv;
-function getSshPath(name) {
+function getSshPath(subdir, name) {
     const temp = getEnv('RUNNER_TEMP');
-    // An older version of the ta_org_sync workflow depends on the exact
-    // path used by this action.  We use _github_home here for compatibility.
-    return path.join(temp, exports.TEMPDIR_NAME, name);
+    return path.join(temp, subdir, name);
 }
 exports.getSshPath = getSshPath;
 function sshKeyscan() {
@@ -149,10 +150,10 @@ function sshKeyscan() {
     });
 }
 exports.sshKeyscan = sshKeyscan;
-function setupGitAction(email, username, deployKey) {
+function setupGitAction(email, username, deployKey, directory) {
     return __awaiter(this, void 0, void 0, function* () {
-        const keyPath = getSshPath('id_rsa');
-        const knownHostsPath = getSshPath('known_hosts');
+        const keyPath = getSshPath(directory, 'id_rsa');
+        const knownHostsPath = getSshPath(directory, 'known_hosts');
         const sshDir = path.dirname(keyPath);
         yield fs_1.promises.mkdir(sshDir, { recursive: true });
         core.info(`Writing deploy key to ${keyPath}`);
@@ -173,10 +174,10 @@ function setupGitAction(email, username, deployKey) {
     });
 }
 exports.setupGitAction = setupGitAction;
-function cleanupGitAction() {
+function cleanupGitAction(directory) {
     return __awaiter(this, void 0, void 0, function* () {
-        const keyPath = getSshPath('id_rsa');
-        const knownHosts = getSshPath('known_hosts');
+        const keyPath = getSshPath(directory, 'id_rsa');
+        const knownHosts = getSshPath(directory, 'known_hosts');
         core.info('Shredding files containing secrets');
         yield exec.exec('shred', ['-zuf', keyPath]);
         yield exec.exec('shred', ['-zuf', knownHosts]);
@@ -752,7 +753,7 @@ class OidcClient {
                 .catch(error => {
                 throw new Error(`Failed to get ID Token. \n 
         Error Code : ${error.statusCode}\n 
-        Error Message: ${error.result.message}`);
+        Error Message: ${error.message}`);
             });
             const id_token = (_a = res.result) === null || _a === void 0 ? void 0 : _a.value;
             if (!id_token) {
