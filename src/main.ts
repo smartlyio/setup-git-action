@@ -20,7 +20,7 @@ async function run(): Promise<void> {
       core.saveState('directory', directory)
       await setupGitAction(email, username, deployKey, directory)
     } else {
-      const directory = process.env['STATE_directory']
+      const directory = core.getState('directory')
       await cleanupGitAction(directory)
     }
   } catch (error) {
