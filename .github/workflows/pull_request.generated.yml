@@ -60,11 +60,14 @@ jobs:
         email: ${{ env.EMAIL_INPUT }}
         username: ${{ env.USERNAME_INPUT }}
     - name: Validate result
-      env:
-        ACTION_SUBDIR: _github_home
       run: |
         set -u
-        cat "$RUNNER_TEMP/$ACTION_SUBDIR/id_rsa"
+
+        DIRECTORIES=("$RUNNER_TEMP"/*)
+
+        [ "${#DIRECTORIES[@]}" -eq 1 ]
+
+        cat "$RUNNER_TEMP/"*"/id_rsa"
         echo
         git config user.name
         git config user.email
