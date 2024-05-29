@@ -1,5 +1,6 @@
 import * as core from '@actions/core'
 import {cleanupGitAction, getEnv, setupGitAction} from './setup-git-action'
+import {randomUUID} from 'crypto'
 
 function isPost(): boolean {
   // Will be false if the environment variable doesn't exist; true if it does.
@@ -15,9 +16,12 @@ async function run(): Promise<void> {
     const deployKey: string = getEnv('GIT_DEPLOY_KEY')
 
     if (!post) {
-      await setupGitAction(email, username, deployKey)
+      const directory = `_github_home_${randomUUID()}`
+      core.saveState('directory', directory)
+      await setupGitAction(email, username, deployKey, directory)
     } else {
-      await cleanupGitAction()
+      const directory = core.getState('directory')
+      await cleanupGitAction(directory)
     }
   } catch (error) {
     core.setFailed((error as Error).message)

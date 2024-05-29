@@ -1,11 +1,11 @@
 test:
-  runs-on: <%= ubuntu_version %>
+  runs-on: ubuntu-22.04
   steps:
-  - uses: actions/checkout@v3
-  - name: Set Node.js 16.x
-    uses: actions/setup-node@v3
+  - uses: actions/checkout@v4
+  - name: Set Node.js 20.x
+    uses: actions/setup-node@v4
     with:
-      node-version: 16.x
+      node-version: 20.x
   - name: "Build action for test"
     run: |
       npm install
@@ -19,19 +19,24 @@ test:
       email: ${{ env.EMAIL_INPUT }}
       username: ${{ env.USERNAME_INPUT }}
   - name: Validate result
-    env:
-      ACTION_SUBDIR: _github_home
     run: |
       set -u
-      cat "$RUNNER_TEMP/$ACTION_SUBDIR/id_rsa"
+
+      DIRECTORIES=("$RUNNER_TEMP"/_github_home_*)
+
+      [ "${#DIRECTORIES[@]}" -eq 1 ]
+
+      KEY_DIRECTORY="${DIRECTORIES[0]}"
+
+      cat "$RUNNER_TEMP/"*"/id_rsa"
       echo
       git config user.name
       git config user.email
       git remote get-url origin
       git config core.sshCommand
-      grep '^github\.com' "$RUNNER_TEMP/$ACTION_SUBDIR/known_hosts"
+      grep '^github\.com' "$KEY_DIRECTORY/known_hosts"
 
-      [[ "$(cat "$RUNNER_TEMP/$ACTION_SUBDIR/id_rsa")" == "not-a-real-key" ]]
+      [[ "$(cat "$KEY_DIRECTORY/id_rsa")" == "not-a-real-key" ]]
       [[ "$(git config user.name)" == "${{ env.USERNAME_INPUT }}" ]]
       [[ "$(git config user.email)" == "${{ env.EMAIL_INPUT }}" ]]
       [[ "$(git remote get-url origin)" == "git@github.com:$GITHUB_REPOSITORY.git" ]]
