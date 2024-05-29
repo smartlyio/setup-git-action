@@ -67,7 +67,7 @@ jobs:
 
         [ "${#DIRECTORIES[@]}" -eq 1 ]
 
-        ACTIONS_DIR="${DIRECTORIES[0]}"
+        KEY_DIRECTORY="${DIRECTORIES[0]}"
 
         cat "$RUNNER_TEMP/"*"/id_rsa"
         echo
@@ -75,9 +75,9 @@ jobs:
         git config user.email
         git remote get-url origin
         git config core.sshCommand
-        grep '^github\.com' "$ACTION_DIR/known_hosts"
+        grep '^github\.com' "$KEY_DIRECTORY/known_hosts"
 
-        [[ "$(cat "$ACTION_DIR/id_rsa")" == "not-a-real-key" ]]
+        [[ "$(cat "$KEY_DIRECTORY/id_rsa")" == "not-a-real-key" ]]
         [[ "$(git config user.name)" == "${{ env.USERNAME_INPUT }}" ]]
         [[ "$(git config user.email)" == "${{ env.EMAIL_INPUT }}" ]]
         [[ "$(git remote get-url origin)" == "git@github.com:$GITHUB_REPOSITORY.git" ]]
